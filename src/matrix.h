@@ -17,6 +17,8 @@ public:
     void kill();
 
     void print() const;
+    void set(double val ,unsigned int x , unsigned int y);
+    double get(unsigned int x , unsigned int y);
     
     void init(double valueOfInit);
 
@@ -31,6 +33,9 @@ public:
     void add_by(double adding_Num);
 
     void multiply_by(double multiplying_Num);
+
+    double *toArray(bool arrangement_type);
+    
 
 };
 

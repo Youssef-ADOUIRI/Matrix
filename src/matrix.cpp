@@ -1,12 +1,11 @@
 #include <iostream>
 #include <random>
-#include"matrix.h"
+#include "matrix.h"
 
 using namespace std;
 
 #define default_Row 1
 #define default_Col 1
-
 
 Matrix::Matrix(unsigned int cols_num = default_Col, unsigned int row_num = default_Row) : nCols(cols_num), nRows(row_num)
 {
@@ -22,11 +21,7 @@ Matrix::Matrix(unsigned int cols_num = default_Col, unsigned int row_num = defau
     }
 }
 
-Matrix::~Matrix(){
-    (*this).kill();
-}
-
-void Matrix:: kill()
+void Matrix::kill()
 {
     /*
         for (int i = 0; i < nRows; i++)
@@ -42,7 +37,7 @@ void Matrix:: kill()
     delete[] matrix;
 }
 
-void Matrix:: print() const
+void Matrix::print() const
 {
     for (int i = 0; i < nRows; i++)
     {
@@ -54,7 +49,7 @@ void Matrix:: print() const
         cout << "]\n";
     }
 }
-void Matrix:: init(double valueOfInit = 0)
+void Matrix::init(double valueOfInit = 0)
 {
     for (int i = 0; i < nRows; i++)
     {
@@ -65,7 +60,12 @@ void Matrix:: init(double valueOfInit = 0)
     }
 }
 
-void Matrix:: T()
+Matrix::~Matrix()
+{
+    //(*this).kill();
+}
+
+void Matrix::T()
 {
     Matrix newM(nRows, nCols);
 
@@ -80,6 +80,13 @@ void Matrix:: T()
     this->kill();
 
     *this = newM;
+}
+
+void Matrix:: set(double val ,unsigned int x , unsigned int y){
+    matrix[x][y] = val;
+}
+double Matrix:: get(unsigned int x , unsigned int y){
+    return matrix[x][y];
 }
 
 Matrix Matrix::add(Matrix m1, Matrix m2)
@@ -134,7 +141,7 @@ Matrix Matrix::multiply(Matrix m1, Matrix m2)
     return result;
 }
 
-void  Matrix::randomize()
+void Matrix::randomize()
 { //generate numbers randomly between -1 and 1
     for (int i = 0; i < nRows; i++)
     {
@@ -145,7 +152,7 @@ void  Matrix::randomize()
     }
 }
 
-void  Matrix::add_by(double adding_Num)
+void Matrix::add_by(double adding_Num)
 {
     for (int i = 0; i < nRows; i++)
     {
@@ -156,7 +163,7 @@ void  Matrix::add_by(double adding_Num)
     }
 }
 
-void  Matrix::multiply_by(double multiplying_Num)
+void Matrix::multiply_by(double multiplying_Num)
 {
     for (int i = 0; i < nRows; i++)
     {
@@ -164,5 +171,34 @@ void  Matrix::multiply_by(double multiplying_Num)
         {
             matrix[i][j] *= multiplying_Num;
         }
+    }
+}
+
+double *Matrix::toArray(bool arrangement_type = true)
+{
+    double *arr_ptr = NULL;
+    arr_ptr = new double[nCols * nRows];
+    if (arrangement_type)
+    {
+        // horizental
+        for (int i = 0; i < nRows; i++)
+        {
+            for (int j = 0; j < nCols; j++)
+            {
+                arr_ptr[i*nCols + j] =  matrix[i][j];
+            }
+        }
+        return arr_ptr;
+    }
+    else{
+        // vertical
+        for (int i = 0; i < nCols; i++)
+        {
+            for (int j = 0; j <  nRows; j++)
+            {
+                arr_ptr[i*nRows + j] =  matrix[j][i];
+            }
+        }
+        return arr_ptr;
     }
 }
