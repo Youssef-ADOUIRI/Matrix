@@ -9,9 +9,12 @@ using namespace std;
 #define default_Row 1
 #define default_Col 1
 
-Matrix::Matrix(const size_t cols_num, const size_t row_num) //: nCols(cols_num), nRows(row_num)
+Matrix::Matrix(const size_t cols_num, const size_t row_num) : nCols(1), nRows(1)
 {
     Reset(cols_num, row_num);
+}
+Matrix::Matrix()
+{
 }
 void Matrix::Reset(const size_t cols_num, const size_t row_num)
 {
@@ -97,8 +100,19 @@ void Matrix::T()
     }
 }
 
-Matrix::Matrix(Matrix const &copy) : nCols(copy.nCols), nRows(copy.nRows), matrix(0)
+Matrix::Matrix(Matrix const &copy) : nCols(1), nRows(1)
 {
+    Reset(copy.nCols, copy.nRows);
+    matrix = copy.matrix;
+}
+Matrix& Matrix:: operator=(Matrix const& copy){
+    if(this != &copy){
+        //later
+        nCols = copy.nCols;
+        nRows =  copy.nRows;
+        matrix = copy.matrix;
+    }
+    return *this;
 }
 
 void Matrix::set(double val, unsigned int x, unsigned int y)
@@ -140,8 +154,6 @@ Matrix Matrix::add(Matrix const &m1, Matrix const &m2)
             result.matrix[i * col_num + j] = m1.matrix[i * col_num + j] + m2.matrix[i * col_num + j];
         }
     }
-    result.print();
-    cout<<endl;
     return result;
 }
 

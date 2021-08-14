@@ -14,6 +14,8 @@ private:
 public:
     Matrix(const size_t cols_num, const size_t row_num);
     Matrix(Matrix const &copy);
+    Matrix& operator=(Matrix const& copy );
+    Matrix();
     //Matrix& Matrix::operator=(Matrix const& copy);
     ~Matrix();
 

@@ -25,12 +25,13 @@ int main()
     m2.init(2);
     //m2.set(-5.1 , 0, 1);
     
-    m2.print();
+    //m2.print();
 
 
     cout << "add\n";
 
-    Matrix result = m1 + m2;
+    Matrix result;
+    result = m1 + m2;
     result.print();
 
     return 0;
