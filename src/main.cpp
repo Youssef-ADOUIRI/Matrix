@@ -5,34 +5,15 @@
 
 using namespace std;
 
+/*prototype*/
+void f(double &x){
+    x = 2.0f * ((double)rand() / RAND_MAX) - 1.0f;
+}
+
 int main()
 {
     srand(time(0));
-
-    Matrix m1(5, 3);
-
-    m1.init(2);
-
-    //m1.set(0 ,1 ,0);
-
-    m1.print();
-
-    m1.T();
-    cout << "trans is : " << endl;
-    m1.print();
-
-    Matrix m2(3, 5);
-    m2.init(2);
-    //m2.set(-5.1 , 0, 1);
-    
-    //m2.print();
-
-
-    cout << "add\n";
-
-    Matrix result;
-    result = m1 + m2;
-    result.print();
+    Matrix m(5 , 5);
 
     return 0;
 }

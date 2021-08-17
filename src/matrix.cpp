@@ -1,7 +1,7 @@
 #include <iostream>
 #include <random>
-
-#include <vector>
+#include <algorithm>
+#include <iterator>
 #include "matrix.h"
 
 using namespace std;
@@ -88,7 +88,6 @@ void Matrix::T()
             for (int j = 0; j < nCols; j++)
             {
                 newM[j * nRows + i] = matrix[i * nCols + j];
-
             }
         }
 
@@ -105,11 +104,13 @@ Matrix::Matrix(Matrix const &copy) : nCols(1), nRows(1)
     Reset(copy.nCols, copy.nRows);
     matrix = copy.matrix;
 }
-Matrix& Matrix:: operator=(Matrix const& copy){
-    if(this != &copy){
+Matrix &Matrix::operator=(Matrix const &copy)
+{
+    if (this != &copy)
+    {
         //later
         nCols = copy.nCols;
-        nRows =  copy.nRows;
+        nRows = copy.nRows;
         matrix = copy.matrix;
     }
     return *this;
@@ -147,13 +148,7 @@ Matrix Matrix::add(Matrix const &m1, Matrix const &m2)
     }
 
     Matrix result(col_num, row_num);
-    for (int i = 0; i < row_num; i++)
-    {
-        for (int j = 0; j < col_num; j++)
-        {
-            result.matrix[i * col_num + j] = m1.matrix[i * col_num + j] + m2.matrix[i * col_num + j];
-        }
-    }
+    transform(m1.matrix.begin() , m1.matrix.end() , m2.matrix.begin() , result.matrix.begin() , plus<double>() );
     return result;
 }
 
@@ -179,15 +174,19 @@ Matrix Matrix::multiply(Matrix const &m1, Matrix const &m2)
     return result;
 }
 
+void Matrix ::f_random(double &x)
+{
+    x = 2.0f * ((double)rand() / RAND_MAX) - 1.0f;
+}
+
 void Matrix::randomize()
 { //generate numbers randomly between -1 and 1
-    for (int i = 0; i < nRows; i++)
-    {
-        for (int j = 0; j < nCols; j++)
-        {
-            matrix[i * nCols + j] = 2.0f * ((double)rand() / RAND_MAX) - 1.0f;
-        }
-    }
+    apply(f_random);
+}
+
+void Matrix::apply(std::function<void(double &)> func)
+{
+    for_each(matrix.begin(), matrix.end(), func);
 }
 
 void Matrix::add_by(double const &adding_Num)
@@ -212,51 +211,54 @@ void Matrix::multiply_by(double const &multiplying_Num)
     }
 }
 
-double *Matrix::toArray(bool arrangement_type = true)
+double *Matrix::to_ptr(bool arrangement_type = true)
 {
-    double *arr_ptr = NULL;
-    arr_ptr = new double[nCols * nRows];
-    if (arrangement_type)
-    {
-        // horizental
-        //memcpy(arr_ptr, matrix, nCols * nRows);
-        //return arr_ptr;
-    }
-    else
-    {
-        // vertical
-        for (int i = 0; i < nCols; i++)
-        {
-            for (int j = 0; j < nRows; j++)
-            {
-                arr_ptr[i * nRows + j] = matrix[i * nCols + j];
-            }
-        }
-        return arr_ptr;
-    }
+    return &matrix[0];
 }
 
-Matrix Matrix::fromArray(const double arr[], size_t size = 1)
+
+
+void Matrix::fromArray(double arr[], size_t size = 1)
 {
+    double *p = arr;
+
     if (size < 1)
     {
         cout << "Error in size" << endl;
     }
-    Matrix m(1, size);
-    //memcpy(m.matrix, arr, size); // i do re-think about this
 
-    return m;
+    Reset(1, size);
+
+    copy(arr, arr + size, matrix.begin());
 }
 
+void  Matrix::fromVector(vector<double> arr){
+    matrix = arr;
+}
+
+vector<double>  Matrix::toVector(){
+    return matrix;
+}
 
 bool operator==(Matrix const &m1, Matrix const &m2)
 {
     if ((m1.nRows != m2.nRows) && (m1.nCols != m2.nCols))
-       return false;
+        return false;
     return m1.matrix == m2.matrix;
 }
+bool operator!=(Matrix const &m1, Matrix const &m2)
+{
+    return !(m1 == m2);
+}
+
+
 
 Matrix operator+(Matrix const &m1, Matrix const &m2)
 {
     return Matrix::add(m1, m2);
+}
+
+Matrix operator*(Matrix const &m1, Matrix const &m2)
+{
+    return Matrix::multiply(m1, m2);
 }

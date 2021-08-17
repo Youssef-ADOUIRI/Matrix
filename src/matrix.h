@@ -2,6 +2,7 @@
 #define DEF_matrix
 
 #include <vector>
+#include <functional>
 
 class Matrix
 {
@@ -10,11 +11,12 @@ private:
     unsigned int nCols;
     unsigned int nRows;
     std::vector<double> matrix;
+    static void f_random(double &x);
 
 public:
     Matrix(const size_t cols_num, const size_t row_num);
     Matrix(Matrix const &copy);
-    Matrix& operator=(Matrix const& copy );
+    Matrix &operator=(Matrix const &copy);
     Matrix();
     //Matrix& Matrix::operator=(Matrix const& copy);
     ~Matrix();
@@ -38,19 +40,23 @@ public:
 
     void randomize();
 
+    void apply(std::function<void(double &)> func);
+
     void add_by(double const &adding_Num);
 
     void multiply_by(double const &multiplying_Num);
 
-    double *toArray(bool arrangement_type);
-    static Matrix fromArray(const double arr[], size_t size);
-
+    double *to_ptr(bool arrangement_type);
+    void fromArray(double arr[], size_t size);
+    void fromVector(std::vector<double> arr);
+    std::vector<double> toVector();
     friend bool operator==(Matrix const &m1, Matrix const &m2);
 };
 
-
 bool operator==(Matrix const &m1, Matrix const &m2);
+bool operator!=(Matrix const &m1, Matrix const &m2);
 
 Matrix operator+(Matrix const &m1, Matrix const &m2);
+Matrix operator*(Matrix const &m1, Matrix const &m2);
 
 #endif
