@@ -53,6 +53,9 @@ public:
     friend bool operator==(Matrix const &m1, Matrix const &m2);
 };
 
+std::pair<double, double> Random_normal_disturbution(double local, double scale);
+std::pair<double, double> normal_distrbution(double x, double y, double mean, double scale);
+
 bool operator==(Matrix const &m1, Matrix const &m2);
 bool operator!=(Matrix const &m1, Matrix const &m2);
 
