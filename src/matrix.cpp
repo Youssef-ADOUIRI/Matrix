@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iterator>
 #include "matrix.h"
+#include <time.h>
 
 using namespace std;
 
@@ -176,7 +177,9 @@ Matrix Matrix::multiply(Matrix const &m1, Matrix const &m2)
 
 void Matrix ::f_random(double &x)
 {
-    x = 2.0f * ((double)rand() / RAND_MAX) - 1.0f;
+    static uint seed = time(0);
+    x = 2.0f * ((double)rand_r(&seed) / RAND_MAX) - 1.0f;
+
 }
 
 void Matrix::randomize()
@@ -220,7 +223,6 @@ double *Matrix::to_ptr(bool arrangement_type = true)
 
 void Matrix::fromArray(double arr[], size_t size = 1)
 {
-    double *p = arr;
 
     if (size < 1)
     {
