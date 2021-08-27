@@ -62,6 +62,15 @@ Matrix::~Matrix()
 {
 }
 
+size_t Matrix::getCols()
+{
+    return nCols;
+}
+size_t Matrix::getRows()
+{
+    return nRows;
+}
+
 void Matrix::T()
 {
     if (nCols == nRows)
@@ -205,25 +214,22 @@ pair<double, double> Random_normal_disturbution(double local, double scale)
 
 void Matrix::nRand(double local, double scale)
 {
-    pair<double, double> c = Random_normal_disturbution(local, scale);
-    uint size = matrix.size();
-    cout<<c.first<<" "<<size/2<<endl;
+    pair<double, double> c;
+    double c1;
+    double c2;
+    size_t size = matrix.size();
     int i = 0;
     while (i < size)
     {
-        matrix[i] = c.first;
-        matrix[i + 1] = c.second;
-        i += 2;
         c = Random_normal_disturbution(local, scale);
-        cout<<c.first<<" "<<i<<endl;
+        c1 = c.second;
+        c2 = c.second;
+        matrix[i] = c1;
+        i++;
+        if(i = size)break;
+        matrix[i] = c2;
+        i++;
     }
-    if (size % 2 !=0 )
-    {
-        cout<<" fg"<<i<<endl;
-        matrix[i] = c.first;
-        return;
-    }
-    else {return;}
 }
 
 void Matrix::randomize()
