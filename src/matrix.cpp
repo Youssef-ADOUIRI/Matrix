@@ -217,16 +217,20 @@ void Matrix::nRand(double local, double scale)
     pair<double, double> c;
     double c1;
     double c2;
-    size_t size = matrix.size();
+    const size_t size = matrix.size();
     int i = 0;
     while (i < size)
     {
+        
         c = Random_normal_disturbution(local, scale);
         c1 = c.second;
         c2 = c.second;
         matrix[i] = c1;
         i++;
-        if(i = size)break;
+        if (i == size){
+            break;
+        }
+
         matrix[i] = c2;
         i++;
     }
