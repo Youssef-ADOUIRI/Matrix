@@ -37,7 +37,7 @@ public:
 
     // static bool operator==(Matrix const& m1, Matrix const& m2);
     // static Matrix& operator+(Matrix const& m1, Matrix const& m2);
-
+    void nRand(double local, double scale);
     void randomize();
 
     void apply(std::function<void(double &)> func);
