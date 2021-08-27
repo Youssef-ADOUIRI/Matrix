@@ -12,7 +12,6 @@ void f(double &x){
 
 int main()
 {
-    srand(time(0));
     Matrix m(5 , 5);
 
     return 0;
