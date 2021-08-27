@@ -149,7 +149,7 @@ Matrix Matrix::add(Matrix const &m1, Matrix const &m2)
     }
 
     Matrix result(col_num, row_num);
-    transform(m1.matrix.begin() , m1.matrix.end() , m2.matrix.begin() , result.matrix.begin() , plus<double>() );
+    transform(m1.matrix.begin(), m1.matrix.end(), m2.matrix.begin(), result.matrix.begin(), plus<double>());
     return result;
 }
 
@@ -179,7 +179,51 @@ void Matrix ::f_random(double &x)
 {
     static uint seed = time(0);
     x = 2.0f * ((double)rand_r(&seed) / RAND_MAX) - 1.0f;
+}
 
+/* randomize funstions */
+pair<double, double> normal_distrbution(double x, double y, double mean, double scale) // from wikipidea : Box-muller transform
+{
+
+    double mag = scale * sqrt(-2.0 * log(x));
+
+    double z1 = mag * cos(2 * 3.14 * y) + mean;
+    double z2 = mag * sin(2 * 3.14 * y) + mean;
+
+    return make_pair(z1, z2);
+}
+
+pair<double, double> Random_normal_disturbution(double local, double scale)
+{
+    static uint seed1 = time(0);
+    static uint seed2 = seed1 + 2;
+    double v = ((double)rand_r(&seed1) / RAND_MAX);
+    double z = ((double)rand_r(&seed2) / RAND_MAX);
+    pair<double, double> c = normal_distrbution(v, z, local, scale);
+    return c;
+}
+
+void Matrix::nRand(double local, double scale)
+{
+    pair<double, double> c = Random_normal_disturbution(local, scale);
+    uint size = matrix.size();
+    cout<<c.first<<" "<<size/2<<endl;
+    int i = 0;
+    while (i < size)
+    {
+        matrix[i] = c.first;
+        matrix[i + 1] = c.second;
+        i += 2;
+        c = Random_normal_disturbution(local, scale);
+        cout<<c.first<<" "<<i<<endl;
+    }
+    if (size % 2 !=0 )
+    {
+        cout<<" fg"<<i<<endl;
+        matrix[i] = c.first;
+        return;
+    }
+    else {return;}
 }
 
 void Matrix::randomize()
@@ -219,8 +263,6 @@ double *Matrix::to_ptr(bool arrangement_type = true)
     return &matrix[0];
 }
 
-
-
 void Matrix::fromArray(double arr[], size_t size = 1)
 {
 
@@ -234,11 +276,13 @@ void Matrix::fromArray(double arr[], size_t size = 1)
     copy(arr, arr + size, matrix.begin());
 }
 
-void  Matrix::fromVector(vector<double> arr){
+void Matrix::fromVector(vector<double> arr)
+{
     matrix = arr;
 }
 
-vector<double>  Matrix::toVector(){
+vector<double> Matrix::toVector()
+{
     return matrix;
 }
 
@@ -252,8 +296,6 @@ bool operator!=(Matrix const &m1, Matrix const &m2)
 {
     return !(m1 == m2);
 }
-
-
 
 Matrix operator+(Matrix const &m1, Matrix const &m2)
 {
