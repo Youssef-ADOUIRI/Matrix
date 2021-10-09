@@ -6,7 +6,7 @@
 #include <time.h>
 
 using namespace std;
-
+ #define R_SEED(x) time(x)
 #define default_Row 1
 #define default_Col 1
 
@@ -140,7 +140,7 @@ double Matrix::get(unsigned int x, unsigned int y)
 
 Matrix Matrix::add(Matrix const &m1, Matrix const &m2)
 {
-    unsigned int row_num = 0, col_num = 0;
+    uint row_num = 0, col_num = 0;
     if (m1.nRows != m2.nRows)
     {
         cout << "Both matrix's rows number don't match";
@@ -184,14 +184,21 @@ Matrix Matrix::multiply(Matrix const &m1, Matrix const &m2)
     return result;
 }
 
+default_random_engine re;
+uniform_int_distribution<int> urid; 
+normal_distribution<double> nd;
+
 void Matrix ::f_random(double &x)
 {
-    static uint seed = time(0);
-    x = 2.0f * ((double)rand_r(&seed) / RAND_MAX) - 1.0f;
+    
+    re.seed( R_SEED(0) );
+    double number = urid(re);
+
+    x = 2.0f * ((double)number / urid.max()) - 1.0f;
 }
 
 /* randomize funstions */
-pair<double, double> normal_distrbution(double x, double y, double mean, double scale) // from wikipidea : Box-muller transform
+pair<double, double> normal_distrbution_h(double x, double y, double mean, double scale) // from wikipidea : Box-muller transform
 {
 
     double mag = scale * sqrt(-2.0 * log(x));
@@ -202,36 +209,33 @@ pair<double, double> normal_distrbution(double x, double y, double mean, double 
     return make_pair(z1, z2);
 }
 
-pair<double, double> Random_normal_disturbution(double local, double scale)
+// pair<double, double> Random_normal_disturbution_h(double local, double scale)
+// {
+//     static uint seed1 = time(0);
+//     static uint seed2 = seed1 + 2;
+//     double v = ((double)rand_r(&seed1) / RAND_MAX);
+//     double z = ((double)rand_r(&seed2) / RAND_MAX);
+//     pair<double, double> c = normal_distrbution(v, z, local, scale);
+//     return c;
+// }
+
+double Random_normal_disturbution(double local, double scale)
 {
-    static uint seed1 = time(0);
-    static uint seed2 = seed1 + 2;
-    double v = ((double)rand_r(&seed1) / RAND_MAX);
-    double z = ((double)rand_r(&seed2) / RAND_MAX);
-    pair<double, double> c = normal_distrbution(v, z, local, scale);
+    nd = normal_distribution<double>(local , scale);
+    double c = nd(re);
     return c;
 }
 
 void Matrix::nRand(double local, double scale)
 {
-    pair<double, double> c;
-    double c1;
-    double c2;
+    double c;
+    re.seed(R_SEED(0));
     const size_t size = matrix.size();
     int i = 0;
     while (i < size)
-    {
-        
+    {       
         c = Random_normal_disturbution(local, scale);
-        c1 = c.second;
-        c2 = c.second;
-        matrix[i] = c1;
-        i++;
-        if (i == size){
-            break;
-        }
-
-        matrix[i] = c2;
+        matrix[i] = c;
         i++;
     }
 }
@@ -288,6 +292,7 @@ void Matrix::fromArray(double arr[], size_t size = 1)
 
 void Matrix::fromVector(vector<double> arr)
 {
+    Reset(1,arr.size());
     matrix = arr;
 }
 
@@ -316,3 +321,29 @@ Matrix operator*(Matrix const &m1, Matrix const &m2)
 {
     return Matrix::multiply(m1, m2);
 }
+
+
+Matrix Matrix::normal_multiplication(Matrix const &m1, Matrix const &m2){
+    uint row_num = 0, col_num = 0;
+    if (m1.nRows != m2.nRows)
+    {
+        cout << "Both matrix's rows number don't match";
+        return m1;
+    }
+    else if (m1.nCols != m2.nCols)
+    {
+        cout << "Both matrix's columns number don't match";
+        return m2;
+    }
+    else
+    {
+        row_num = m1.nRows;
+        col_num = m1.nCols;
+    }
+
+    Matrix result(col_num, row_num);
+    transform(m1.matrix.begin(), m1.matrix.end(), m2.matrix.begin(), result.matrix.begin(), multiplies<double>());
+    return result;
+}
+
+

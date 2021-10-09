@@ -4,16 +4,20 @@
 #include <vector>
 #include <functional>
 
+typedef unsigned int uint;
+
 class Matrix
 {
 
 private:
-    unsigned int nCols;
-    unsigned int nRows;
+    
     std::vector<double> matrix;
     static void f_random(double &x);
+    unsigned int nCols;
+    unsigned int nRows;
 
 public:
+
     Matrix(const size_t cols_num, const size_t row_num);
     Matrix(Matrix const &copy);
     Matrix &operator=(Matrix const &copy);
@@ -21,6 +25,8 @@ public:
     //Matrix& Matrix::operator=(Matrix const& copy);
     ~Matrix();
 
+    size_t getCols();
+    size_t getRows();
     void Reset(const size_t cols_num, const size_t row_num);
 
     void print() const;
@@ -46,6 +52,8 @@ public:
 
     void multiply_by(double const &multiplying_Num);
 
+    static Matrix normal_multiplication(Matrix const &m1, Matrix const &m2);
+
     double *to_ptr(bool arrangement_type);
     void fromArray(double arr[], size_t size);
     void fromVector(std::vector<double> arr);
@@ -53,8 +61,8 @@ public:
     friend bool operator==(Matrix const &m1, Matrix const &m2);
 };
 
-std::pair<double, double> Random_normal_disturbution(double local, double scale);
-std::pair<double, double> normal_distrbution(double x, double y, double mean, double scale);
+double Random_normal_disturbution(double local, double scale);
+std::pair<double, double> normal_distrbution_h(double x, double y, double mean, double scale);
 
 bool operator==(Matrix const &m1, Matrix const &m2);
 bool operator!=(Matrix const &m1, Matrix const &m2);
