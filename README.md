@@ -1,5 +1,5 @@
 # Matrix
-is a static library, used to simplfy the matrix's operaitons in linear algebra.
+is a static library, used to simplify the matrix's operations in linear algebra.
  
  
  ------------- 
