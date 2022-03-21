@@ -9,7 +9,7 @@ is a static library, used to simplify the matrix's operations in linear algebra.
   In the code include the library using : 
   #include "Matrix/matrix.h"
  
- comand line to simply compile your program: 
+ comand line to simply compile your program using GCC compiler : 
  g++ YOURFILENAME.cpp -LMatrix -lMatrix -o EXECUTABLE_NAME
 
  -------------
